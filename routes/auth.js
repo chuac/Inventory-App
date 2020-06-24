@@ -10,6 +10,7 @@ const { requireUsername,
         requirePassword,
         requirePasswordConfirmation
     } = require('./validators');
+const { comparePasswords, createHashedPassword } = require('./helpers');
 
 const router = express.Router(); // instead of app, this Router will link it back to where app is created in index.js
 
@@ -36,7 +37,7 @@ router.post('/signup',
     async (req, res) => {
         const { username, email, password } = req.body; // all form data is contained inside req.body
 
-        const values = [ username, email, password ];
+        const values = [ username, email, await createHashedPassword(password) ];
 
         db.pool.query('INSERT INTO users(username, email, password_hash) VALUES (?, ?, ?)', values, (error, results, fields) => {
             if (error) throw error;
