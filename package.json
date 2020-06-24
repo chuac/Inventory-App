@@ -1,0 +1,27 @@
+{
+  "name": "Inventory-App",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuac/Inventory-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chuac/Inventory-App/issues"
+  },
+  "homepage": "https://github.com/chuac/Inventory-App#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.0",
+    "nodemon": "^2.0.4"
+  }
+}
