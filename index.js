@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session'); // also a middleware function
 
+const authRouter = require('./routes/auth');
+
 const app = express();
 
 const connection = mysql.createConnection({
@@ -15,10 +17,12 @@ const connection = mysql.createConnection({
 
 app.set("view engine", "ejs"); // to use EJS templating engine
 app.use(express.static('public')); // look inside our cwd, and the public folder and make it available to the world
-app.use(bodyParser.urlencoded({ extended: true} )); // now every single route handler will be parsed by this. only handles url-encoded form data!
+app.use(bodyParser.urlencoded({ extended: true } )); // now every single route handler will be parsed by this. only handles url-encoded form data!
 app.use(cookieSession({
     keys: ['tduzetdfjdfsaa2yaaq']
 })); // cookie-session will encrypt the info we store in the cookie, when we provide a key string
+
+app.use(authRouter);
 
 app.get('/', (req, res) => {
     connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
@@ -28,13 +32,13 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/signin', (req, res) => {
-    res.render('auth/signin');
-})
+// app.get('/signin', (req, res) => {
+//     res.render('auth/signin');
+// });
 
-app.get('/signup', (req, res) => {
-    res.render('auth/signup');
-})
+// app.get('/signup', (req, res) => {
+//     res.render('auth/signup');
+// })
 
 //connection.end();
 
