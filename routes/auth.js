@@ -1,11 +1,12 @@
 const express = require('express');
 const ejs = require('ejs');
 
+const db = require('./mysqlPool');
 const { handleErrors } = require('./middlewares');
 const signupTemplate = './auth/signup';
-//const signupTemplate = require('../views/auth/signup.ejs');
-//const signinTemplate = require('../views/auth/signin');
-const { requireEmail,
+const signinTemplate = './auth/signin';
+const { requireUsername,
+        requireEmail,
         requirePassword,
         requirePasswordConfirmation
     } = require('./validators');
@@ -26,18 +27,27 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup', 
     [
+        requireUsername,
         requireEmail,
         requirePassword,
         requirePasswordConfirmation
     ],
     handleErrors(signupTemplate),
     async (req, res) => {
-        const { email, password } = req.body; // all form data is contained inside req.body
+        const { username, email, password } = req.body; // all form data is contained inside req.body
 
-        console.log(email);
-        console.log(password);
+        const values = [ username, email, password ];
+
+        db.pool.query('INSERT INTO users(username, email, password_hash) VALUES (?, ?, ?)', values, (error, results, fields) => {
+            if (error) throw error;
+            console.log(results);
+        });
 
         res.redirect('/signup');
+});
+
+router.get('/signin', (req, res) => {
+    res.render(signinTemplate);
 });
 
 module.exports = router;

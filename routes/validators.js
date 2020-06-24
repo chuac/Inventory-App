@@ -1,6 +1,10 @@
 const { check } = require('express-validator'); // deconstruct check out of express-validator
 
 module.exports = {
+    requireUsername: check('username')
+        .trim()
+        .isLength( { min: 2, max: 20 })
+        .withMessage('Must be between 2 and 20 characters'),
     requireEmail: check('email') // 'email' here refers to the name="email" property in our HTML form
         .trim()
         .normalizeEmail()
