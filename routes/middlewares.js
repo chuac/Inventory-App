@@ -17,7 +17,7 @@ module.exports = {
                 if (dataCallback) {
                     data = await dataCallback(req); // run the function given to us (grab the data they need)
                 }
-                
+                console.log('where we want to print errors');
                 console.log(errors);
 
                 return res.render(templateFunc, { getError, errors, ...data });

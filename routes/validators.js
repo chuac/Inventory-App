@@ -1,4 +1,6 @@
 const { check } = require('express-validator'); // deconstruct check out of express-validator
+const db = require('./mysql');
+const { comparePasswords } = require('./helpers');
 
 module.exports = {
     requireUsername: check('username')
@@ -25,4 +27,42 @@ module.exports = {
                 return true; // need this so the validator wouldn't return with an 'Invalid Value' even if the passwords matched
             }
         }),
+    requireEmailExists: check('email')
+        .trim()
+        .normalizeEmail()
+        .isEmail()
+        .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            try {
+                let [rows] = await db.pool.query('SELECT id FROM users WHERE email = ?', [email]);
+                if (rows.length === 0) { // no rows in the query result, meaning user NOT found by that email
+                    throw new Error('Email not found');
+                }
+            } catch (error) {
+                throw error;
+            }
+
+            //// code below doesn't work because it's using callback function with async/await
+
+            // await db.pool.query('SELECT id FROM users WHERE email = ?', [email], (error, rows, fields) => {
+            //     if (error) throw error;
+
+            //     if (typeof rows[0] === 'undefined') { // no result, meaning no user at that email
+            //         throw new Error('Email not found');
+            //     }
+            // });
+        }),
+    requireValidPasswordForUser: check('password')
+        .trim()
+        .custom(async (password, { req }) => {
+            db.pool.query('SELECT password_hash FROM users WHERE email = ?', req.body.email, (error, results, fields) => {
+                if (error) throw error;
+                
+                const validPassword = comparePasswords(results[0].password_hash, password);
+
+                if (!validPassword) {
+                    throw new Error('Invalid password');
+                }
+            });
+        })
 };

@@ -2,7 +2,7 @@
 
 require('dotenv').config(); // sets up .env environment variables
 
-const mysql = require('mysql');
+const mysql = require('mysql2'); // mysql2 supports Promises https://www.npmjs.com/package/mysql2
 
 const pool  = mysql.createPool({
     connectionLimit : 10,
@@ -12,7 +12,7 @@ const pool  = mysql.createPool({
     database: 'inventory_app'
 });
 
-module.exports.pool = pool;
+module.exports.pool = pool.promise();
 
 //// We could also export getConnection() below if we wanted to do share connection state for subsequent queries (transanctions possibly). Pools can't guarantee this
 // module.exports.getConnection = function(callback) {

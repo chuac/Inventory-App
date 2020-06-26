@@ -1,14 +1,16 @@
 const express = require('express');
 const ejs = require('ejs');
 
-const db = require('./mysqlPool');
+const db = require('./mysql');
 const { handleErrors } = require('./middlewares');
 const signupTemplate = './auth/signup';
 const signinTemplate = './auth/signin';
 const { requireUsername,
         requireEmail,
         requirePassword,
-        requirePasswordConfirmation
+        requirePasswordConfirmation,
+        requireEmailExists,
+        requireValidPasswordForUser
     } = require('./validators');
 const { comparePasswords, createHashedPassword } = require('./helpers');
 
@@ -49,6 +51,16 @@ router.post('/signup',
 
 router.get('/signin', (req, res) => {
     res.render(signinTemplate);
+});
+
+router.post('/signin',
+    [
+        requireEmailExists,
+        //requireValidPasswordForUser
+    ],
+    handleErrors(signinTemplate),
+    async (req, res) => {
+        res.redirect('/signin');
 });
 
 module.exports = router;

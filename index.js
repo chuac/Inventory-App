@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session'); // also a middleware function
 
-const db = require('./routes/mysqlPool'); // the db connection is now made inside the mysqlPool module, and can be accessed from any other module!
+const db = require('./routes/mysql'); // the db connection is now made inside the mysqlPool module, and can be accessed from any other module!
 
 const authRouter = require('./routes/auth');
 
