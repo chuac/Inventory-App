@@ -3,11 +3,40 @@ const db = require('./mysql');
 const { comparePasswords } = require('./helpers');
 
 module.exports = {
-    requireUsername: check('username')
+    requireUniqueEmail: check('email') // is a valid email AND doesn't currently exist in the DB
+        .trim()
+        .normalizeEmail()
+        .isEmail()
+        .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            try {
+                let [rows] = await db.pool.query('SELECT id FROM users WHERE email = ?', email);
+                if (rows.length > 0) { // no rows in the query result, meaning user NOT found by that email
+                    throw new Error('Email already in use');
+                }
+            } catch (error) {
+                throw error;
+            }
+        }),
+    requireUniqueUsername: check('username') // 'username' here refers to the name="email" property in our HTML form
+        .trim()
+        .isLength( { min: 2, max: 20 })
+        .withMessage('Must be between 2 and 20 characters')
+        .custom(async (username) => {
+            try {
+                let [rows] = await db.pool.query('SELECT id FROM users WHERE username = ?', username);
+                if (rows.length > 0) { // no rows in the query result, meaning user NOT found by that username
+                    throw new Error('Username already in use');
+                }
+            } catch (error) {
+                throw error;
+            }
+        }),
+    requireUsername: check('username') // 'username' here refers to the name="email" property in our HTML form
         .trim()
         .isLength( { min: 2, max: 20 })
         .withMessage('Must be between 2 and 20 characters'),
-    requireEmail: check('email') // 'email' here refers to the name="email" property in our HTML form
+    requireEmail: check('email') // <-- not currently used
         .trim()
         .normalizeEmail()
         .isEmail()

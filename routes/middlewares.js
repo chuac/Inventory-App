@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 
-function getError(errors, property) {
+function getError(errors, property) { // parse validation result error data
     try {
         return errors.mapped()[property].msg;
     } catch (err) {
@@ -27,7 +27,7 @@ module.exports = {
             next(); // everything went well! tells Express to do the next thing
         }
     },
-    requireAuth(req, res, next) {
+    requireAuth(req, res, next) { // attach this middleware to any route that requires user to be signed in
         if (!req.session.userId) { // if user not signed in (they don't have userId in their session cookies)
             return res.redirect('/signin');
         }

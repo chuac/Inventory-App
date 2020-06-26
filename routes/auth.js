@@ -1,18 +1,19 @@
 const express = require('express');
 const ejs = require('ejs');
+//const flash = require('connect-flash');
 
 const db = require('./mysql');
 const { handleErrors } = require('./middlewares');
 const signupTemplate = './auth/signup';
 const signinTemplate = './auth/signin';
-const { requireUsername,
-        requireEmail,
+const { requireUniqueEmail,
+        requireUniqueUsername,
         requirePassword,
         requirePasswordConfirmation,
         requireEmailExists,
         requireValidPasswordForUser
     } = require('./validators');
-const { comparePasswords, createHashedPassword } = require('./helpers');
+const { createHashedPassword } = require('./helpers');
 
 const router = express.Router(); // instead of app, this Router will link it back to where app is created in index.js
 
@@ -25,13 +26,13 @@ const router = express.Router(); // instead of app, this Router will link it bac
 // };
 
 router.get('/signup', (req, res) => {
-    res.render(signupTemplate, { });
+    res.render(signupTemplate);
 });
 
 router.post('/signup', 
     [
-        requireUsername,
-        requireEmail,
+        requireUniqueUsername,
+        requireUniqueEmail,
         requirePassword,
         requirePasswordConfirmation
     ],
@@ -60,7 +61,24 @@ router.post('/signin',
     ],
     handleErrors(signinTemplate),
     async (req, res) => {
+        const { email } = req.body;
+
+        try {
+            let [rows] = await db.pool.query('SELECT id FROM users WHERE email = ?', email);
+            if (rows.length > 0) { // found a user
+                req.session.userId = rows[0].id; // attach user's id to their cookie data to keep them signed in
+            }
+        } catch (error) {
+            throw error;
+        }
+
         res.redirect('/signin');
+});
+
+router.get('/signout', (req, res) => {
+    //req.session = null; // clear out any cookie data the user has
+    req.flash('info', 'Logged out!'); // // Set a flash message by passing the key, followed by the value, to req.flash().
+    res.redirect('/');
 });
 
 module.exports = router;
