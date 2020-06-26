@@ -34,7 +34,7 @@ module.exports = {
         .withMessage('Must be a valid email')
         .custom(async (email) => {
             try {
-                let [rows] = await db.pool.query('SELECT id FROM users WHERE email = ?', [email]);
+                let [rows] = await db.pool.query('SELECT id FROM users WHERE email = ?', email);
                 if (rows.length === 0) { // no rows in the query result, meaning user NOT found by that email
                     throw new Error('Email not found');
                 }
@@ -55,14 +55,20 @@ module.exports = {
     requireValidPasswordForUser: check('password')
         .trim()
         .custom(async (password, { req }) => {
-            db.pool.query('SELECT password_hash FROM users WHERE email = ?', req.body.email, (error, results, fields) => {
-                if (error) throw error;
-                
-                const validPassword = comparePasswords(results[0].password_hash, password);
+            try {
+                console.log(req.body.email);
+                let [rows] = await db.pool.query('SELECT password_hash FROM users WHERE email = ?', req.body.email);
+                if (rows.length > 0) {
+                    const validPassword = await comparePasswords(rows[0].password_hash, password);
 
-                if (!validPassword) {
-                    throw new Error('Invalid password');
+                    if (!validPassword) {
+                        throw new Error('Invalid password');
+                    } else {
+                        console.log('password ok');
+                    }
                 }
-            });
+            } catch (error) {
+                throw error;
+            }
         })
 };

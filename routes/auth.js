@@ -56,7 +56,7 @@ router.get('/signin', (req, res) => {
 router.post('/signin',
     [
         requireEmailExists,
-        //requireValidPasswordForUser
+        requireValidPasswordForUser
     ],
     handleErrors(signinTemplate),
     async (req, res) => {
