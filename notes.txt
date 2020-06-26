@@ -6,3 +6,5 @@ pass: test
 
 
 (locals.message) can be used as shorthand for (typeof message !== 'undefined')
+
+<%= `"${row.last_updated}"` %>

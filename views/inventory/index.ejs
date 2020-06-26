@@ -1,5 +1,37 @@
-<%- include('../header'); -%>
-<h1>
-    Inventory Index!
-</h1>
-<%- include('../footer'); -%>
+<%- include('../header'); %>
+
+<div class="columns is-centered">
+    <div class="column is-one-third">
+        <h1>
+            Inventory Index!
+        </h1>
+        <br>
+        <ul>
+        <% for (let row of rows) { %>
+            <li>
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <%= `${row.name} - ${row.size}` %> 
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            <%= `${row.num_count} remaining` %> 
+                            <br>
+                            <time datetime="2016-1-1"></time>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item">Update quantity</a>
+                        <a href="#" class="card-footer-item">Edit</a>
+                    </footer>
+                </div>
+            </li>
+            <br>
+        <% } %>
+        </ul>
+    </div>
+</div>
+
+<%- include('../footer'); %>
