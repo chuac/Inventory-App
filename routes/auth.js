@@ -1,5 +1,4 @@
 const express = require('express');
-const ejs = require('ejs');
 //const flash = require('connect-flash');
 
 const db = require('./mysql');
@@ -72,11 +71,11 @@ router.post('/signin',
             throw error;
         }
 
-        res.redirect('/signin');
+        res.redirect('/inventory');
 });
 
 router.get('/signout', (req, res) => {
-    //req.session = null; // clear out any cookie data the user has
+    req.session.userId = null; // clear out any cookie data the user has
     req.flash('info', 'Logged out!'); // // Set a flash message by passing the key, followed by the value, to req.flash().
     res.redirect('/');
 });
