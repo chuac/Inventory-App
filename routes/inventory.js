@@ -22,5 +22,23 @@ router.get('/inventory',
         }
 });
 
+router.get('/inventory/:id/update',
+    requireAuth,
+    async (req, res) => {
+        // :id from URL can be accessed at req.params.id
+        // show a form, pre-populated with the item's data
+        console.log(req.params.id);
+        res.send(req.params.id);
+});
+
+router.get('/inventory/add',
+    requireAuth,
+    async (req, res) => {
+        // :id from URL can be accessed at req.params.id
+        // show an empty form to create items
+        console.log();
+        res.send();
+});
+
 
 module.exports = router;
