@@ -99,5 +99,10 @@ module.exports = {
             } catch (error) {
                 throw error;
             }
-        })
+        }),
+    // ---------------------------------------------------------------------
+    requireValidItemName: check('item')
+        .trim()
+        .isLength( { min: 2, max: 30 })
+        .withMessage('Must be beween 2 and 30 characters')
 };

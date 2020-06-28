@@ -3,6 +3,9 @@ const express = require('express');
 const db = require('./mysql');
 const { handleErrors, requireAuth } = require('./middlewares');
 const inventoryIndexTemplate = './inventory/index';
+const inventoryCreateTemplate = './inventory/create';
+const { requireValidItemName
+} = require('./validators');
 
 const router = express.Router();
 
@@ -20,6 +23,21 @@ router.get('/inventory',
         } catch (error) {
             throw error;
         }
+});
+
+router.get('/inventory/create',
+    requireAuth,
+    async (req, res) => {
+        res.render(inventoryCreateTemplate);
+});
+
+router.post('/inventory/create',
+    requireAuth,
+    [
+        requireValidItemName
+    ],
+    async (req, res) => {
+        // if passed validation then insert item into db
 });
 
 router.get('/inventory/:id/update',

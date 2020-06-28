@@ -1,0 +1,58 @@
+<%- include('../header'); %>
+
+<div class="columns is-centered">
+    <div class="column is-one-third">
+        <form method="POST">
+            <h1 class="title">Add a new item</h1>
+            <div class="field">
+                <label class="label">Item name</label>
+                <input required class="input" placeholder="Item name" name="name" />
+                <% try { %>
+                <p class="help is-danger"><%= getError(errors, 'name'); %></p>
+                <% } catch (err) {} %>
+            </div>
+            <label class="label">Size</label>
+            <div class="field has-addons">
+                <p class="control">
+                    <input required class="input" placeholder="Size" name="size" />
+                </p>
+                <p class="control">
+                    <span class="select">
+                        <select>
+                          <option>g</option>
+                          <option>kg</option>
+                          <option>mL</option>
+                          <option>L</option>
+                          <option>bottle(s)</option>
+                          <option>6-pack</option>
+                          <option>carton(s)</option>
+                          <option>packet(s)</option>
+                        </select>
+                      </span>
+                </p>
+                <% try { %>
+                <p class="help is-danger"><%= getError(errors, 'size'); %></p>
+                <% } catch (err) {} %>
+            </div>
+            <div class="field">
+                <label class="label">Item count</label>
+                <input required class="input" placeholder="# of items" name="num_count"/>
+                <% try { %>
+                <p class="help is-danger"><%= getError(errors, 'num_count'); %></p>
+                <% } catch (err) {} %>
+            </div>
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <textarea class="textarea" placeholder="Description" name="description"></textarea>
+                </div>
+                <% try { %>
+                <p class="help is-danger"><%= getError(errors, 'description'); %></p>
+                <% } catch (err) {} %>
+            </div>
+            <button class="button is-primary">Create</button>
+            </form>
+    </div>
+</div>
+
+<%- include('../footer'); %>
