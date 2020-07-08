@@ -38,6 +38,8 @@ router.post('/inventory/create',
     ],
     async (req, res) => {
         // if passed validation then insert item into db
+        console.log(req.body);
+        res.send('done');
 });
 
 router.get('/inventory/:id/update',
