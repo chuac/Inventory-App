@@ -5,6 +5,7 @@ const cookieSession = require('cookie-session'); // also a middleware function
 const cookieParser = require('cookie-parser');
 //const session = require('express-session');
 const flash = require('connect-flash');
+const cors = require('cors');
 
 const db = require('./routes/mysql'); // the db connection is now made inside the mysqlPool module, and can be accessed from any other module!
 
@@ -16,22 +17,23 @@ const apiInventoryRouter = require('./routes/api/inventory');
 const app = express();
 
 
-app.set("view engine", "ejs"); // to use EJS templating engine
-app.use(express.static('public')); // look inside our cwd, and the public folder and make it available to the world
-app.use(bodyParser.urlencoded({ extended: true } )); // now every single route handler will be parsed by this. only handles url-encoded form data!
-app.use(cookieParser('aefeafahgsr23r31adhg'));
+///app.set("view engine", "ejs"); // to use EJS templating engine
+///app.use(express.static('public')); // look inside our cwd, and the public folder and make it available to the world
+///app.use(bodyParser.urlencoded({ extended: true } )); // now every single route handler will be parsed by this. only handles url-encoded form data!
+///app.use(cookieParser('aefeafahgsr23r31adhg'));
 // app.use(session({
 //     secret: 'keyboard cat',
 //     resave: false,
 //     saveUninitialized: true,
 //     cookie: { secure: true }
 //   }));
-app.use(cookieSession({
-    keys: ['tduzetdfjdfsaa2yaaq']
-})); // cookie-session will encrypt the info we store in the cookie, when we provide a key string
-app.use(flash()); // connect-flash package
+// app.use(cookieSession({
+//     keys: ['tduzetdfjdfsaa2yaaq']
+// })); // cookie-session will encrypt the info we store in the cookie, when we provide a key string
+// app.use(flash()); // connect-flash package
 
 app.use(bodyParser.json()); // using bodyParser to parse JSON bodies into JS objects
+app.use(cors());
 
 app.use(authRouter);
 app.use(inventoryRouter);

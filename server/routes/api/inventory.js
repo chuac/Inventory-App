@@ -5,7 +5,7 @@ const db = require('../mysql');
 
 const router = express.Router();
 
-// GET all items
+// GET all items, ordered by last_updated
 router.get('/api/inventory', async (req, res) => {
     // const test = [
     //     { abc: 'Hello World'}
@@ -14,6 +14,7 @@ router.get('/api/inventory', async (req, res) => {
     try {
         let [rows] = await db.pool.query('SELECT * FROM items ORDER BY last_updated DESC');
         if (rows.length > 0) { // found at least one item
+            console.log('Someone requested a GET');
             res.send(rows);
         } else {
             res.send([]);

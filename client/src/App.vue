@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <app-header></app-header>
-        <button class="button is-primary">This is a button</button>
+        <router-view></router-view>
         <app-footer></app-footer>
     </div>
 </template>
