@@ -11,6 +11,8 @@ const db = require('./routes/mysql'); // the db connection is now made inside th
 const authRouter = require('./routes/auth');
 const inventoryRouter = require('./routes/inventory');
 
+const apiInventoryRouter = require('./routes/api/inventory');
+
 const app = express();
 
 
@@ -29,8 +31,12 @@ app.use(cookieSession({
 })); // cookie-session will encrypt the info we store in the cookie, when we provide a key string
 app.use(flash()); // connect-flash package
 
+app.use(bodyParser.json()); // using bodyParser to parse JSON bodies into JS objects
+
 app.use(authRouter);
 app.use(inventoryRouter);
+
+app.use(apiInventoryRouter);
 
 app.get('/', (req, res) => {
     res.render('index', { message: req.flash('info') }); // message will hold an array of flash messages returned by passing the key to req.flash()
