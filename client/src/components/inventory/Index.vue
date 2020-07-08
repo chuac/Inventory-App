@@ -52,7 +52,7 @@ export default {
         }
     },
     created() {
-        axios.get('http://localhost:3000/api/inventory')
+        axios.get('http://192.168.20.80:3000/api/inventory')
             .then((response) => {
                 console.log(response);
                 this.items = response.data;
@@ -65,7 +65,7 @@ export default {
         // .then((data) => {
         //     this.items = data.data.slice(0, 10); // we want just first 10 elements
         //     //this.items = data;
-        // })
+        // }) http://localhost:3000/api/inventory
     }
 }
 </script>
