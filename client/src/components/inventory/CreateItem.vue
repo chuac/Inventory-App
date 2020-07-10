@@ -5,9 +5,10 @@
                 <h1 class="title">Add a new item</h1>
                 <div class="field">
                     <label class="label">Item name</label>
-                    <input v-model.lazy="item.name" required class="input" placeholder="Item name" name="name" />
+                    <input v-model.lazy="$v.item.name.$model" required class="input" placeholder="Item name" name="name" />
                     
-                    <p class="help is-danger"></p>
+                    <p class="help is-danger" v-if="submitted && !$v.item.name.required">This field is required</p>
+                    <p class="help is-danger" v-if="submitted && (!$v.item.name.minLength || !$v.item.name.maxLength)">Must be between 1 and 255 characters</p>
                     
                 </div>
                 <label class="label">Size</label>
@@ -35,10 +36,10 @@
                 </div>
                 <div class="field">
                     <label class="label">Item count</label>
-                    <input v-model.lazy="item.num_count" required class="input" placeholder="# of items" name="num_count"/>
+                    <input v-model.lazy="$v.item.num_count.$model" required class="input" placeholder="# of items" name="num_count"/>
                     
-                    <p class="help is-danger"></p>
-                    
+                    <p class="help is-danger" v-if="submitted && !$v.item.num_count.required">This field is required</p>
+                    <p class="help is-danger" v-if="submitted && !$v.item.num_count.decimal">Has to be a number</p>
                 </div>
                 <div class="field">
                     <label class="label">Description</label>
@@ -49,7 +50,7 @@
                     <p class="help is-danger"></p>
                     
                 </div>
-                <button v-on:click.prevent="create" class="button is-primary">Create</button>
+                <button v-on:click.prevent="handleSubmit" class="button is-primary">Create</button>
                 </form>
         </div>
     </div>
@@ -57,6 +58,8 @@
 
 <script>
 import axios from 'axios'
+
+const { required, decimal, minLength, maxLength } = require('vuelidate/lib/validators')
 
 export default {
     data() {
@@ -67,12 +70,32 @@ export default {
                 size_unit: '',
                 num_count: '',
                 description: ''
+            },
+            submitted : false
+        }
+    },
+    validations: {
+        item: {
+            name: {
+                required,
+                minLength: minLength(1),
+                maxLength: maxLength(255)
+            },
+            size: {
+                maxLength: maxLength(100)
+            },
+            num_count: {
+                required,
+                decimal,
+                maxLength: maxLength(10)
+            },
+            description: {
+                maxLength: maxLength(100)
             }
         }
     },
     methods: {
-        create: function() {
-            console.log(this.item);
+        createItem: function() {
             axios.post('http://localhost:3000/api/inventory', {
                 name: this.item.name,
                 size: this.item.size,
@@ -84,6 +107,16 @@ export default {
                 console.log(response);
                 this.$router.push('/inventory');
             })
+        },
+        handleSubmit: function() {
+            this.submitted = true;
+
+            this.$v.$touch(); // make all inputs "dirty"
+            if (this.$v.$invalid) { // code will stop here and show errors, if there are any (without hitting createItem())
+                return;
+            }
+
+            this.createItem();
         }
     }
 }

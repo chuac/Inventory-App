@@ -11,9 +11,9 @@
                     </h1>
                 </div>
                 <div class="field is-grouped is-grouped-right">
-                    <a class="button is-primary" href="inventory/create">
+                    <router-link v-bind:to="`/inventory/create`" class="button is-primary" href="inventory/create">
                         Create
-                    </a>
+                    </router-link>
                 </div>
 
             </div>

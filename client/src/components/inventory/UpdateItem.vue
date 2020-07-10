@@ -5,9 +5,10 @@
                 <h1 class="title">Update item</h1>
                 <div class="field">
                     <label class="label">Item name</label>
-                    <input v-model.lazy="item.name" required class="input" placeholder="Item name" name="name" />
-                    
-                    <p class="help is-danger"></p>
+                    <input v-model.lazy="$v.item.name.$model" required class="input" placeholder="Item name" name="name" />
+
+                    <p class="help is-danger" v-if="submitted && !$v.item.name.required">This field is required</p>
+                    <p class="help is-danger" v-if="submitted && (!$v.item.name.minLength || !$v.item.name.maxLength)">Must be between 1 and 255 characters</p>
                     
                 </div>
                 <label class="label">Size</label>
@@ -35,9 +36,10 @@
                 </div>
                 <div class="field">
                     <label class="label">Item count</label>
-                    <input v-model.lazy="item.num_count" required class="input" placeholder="# of items" name="num_count"/>
-                    
-                    <p class="help is-danger"></p>
+                    <input v-model.lazy="$v.item.num_count.$model" required class="input" placeholder="# of items" name="num_count"/>
+
+                    <p class="help is-danger" v-if="submitted && !$v.item.num_count.required">This field is required</p>
+                    <p class="help is-danger" v-if="submitted && !$v.item.num_count.decimal">Has to be a number</p>
                     
                 </div>
                 <div class="field">
@@ -49,8 +51,8 @@
                     <p class="help is-danger"></p>
                     
                 </div>
-                <div class="buttons">
-                    <button v-on:click.prevent="updateItem" class="button is-primary">Update</button>
+                <div class="buttons"> <!-- Bulma CSS -->
+                    <button v-on:click.prevent="handleSubmit" class="button is-primary">Update</button>
                     <button v-on:click.prevent="deleteConfirmation = !deleteConfirmation" class="button is-danger is-outlined">Delete</button>
                 </div>
                 </form>
@@ -75,6 +77,8 @@
 <script>
 import axios from 'axios'
 
+const { required, decimal, minLength, maxLength } = require('vuelidate/lib/validators')
+
 export default {
     data() {
         return {
@@ -85,7 +89,28 @@ export default {
                 num_count: '',
                 description: ''
             },
+            submitted: false,
             deleteConfirmation: false // will be flipped when we want to show user the modal
+        }
+    },
+    validations: {
+        item: {
+            name: {
+                required,
+                minLength: minLength(1),
+                maxLength: maxLength(255)
+            },
+            size: {
+                maxLength: maxLength(100)
+            },
+            num_count: {
+                required,
+                decimal,
+                maxLength: maxLength(10)
+            },
+            description: {
+                maxLength: maxLength(100)
+            }
         }
     },
     methods: {
@@ -113,10 +138,19 @@ export default {
                     this.$router.push('/inventory');
                 }
             })
+        },
+        handleSubmit: function() {
+            this.submitted = true;
+
+            this.$v.$touch(); // make all inputs "dirty"
+            if (this.$v.$invalid) { // code will stop here and show errors, if there are any (without hitting updateItem())
+                return;
+            }
+
+            this.updateItem();
         }
     },
-    created() {
-        console.log(this.$route.params.id);
+    created() { // pre-fill in the form input boxes with the current item's data
         axios.get(`http://localhost:3000/api/inventory/${this.$route.params.id}`)
         .then((response) => {
             console.log(response);
