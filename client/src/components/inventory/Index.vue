@@ -52,7 +52,7 @@ export default {
         }
     },
     created() {
-        axios.get('http://192.168.20.80:3000/api/inventory')
+        axios.get('http://localhost:3000/api/inventory')
             .then((response) => {
                 console.log(response);
                 this.items = response.data;

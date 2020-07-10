@@ -57,6 +57,30 @@ router.post('/api/inventory', async (req, res) => {
     }
 });
 
+// UPDATE/PUT an existing item
+router.put('/api/inventory/:id', async (req, res) => {
+    const id = req.params.id;
+    const { name, size, num_count, description } = req.body; // all form data is contained inside req.body
+
+    const values = [ name, size, num_count, description, id ];
+    try {
+        const query = 
+            `UPDATE items
+            SET name = ?,
+                size = ?,
+                num_count = ?,
+                description = ?
+            WHERE id = ?`
+        let [rows] = await db.pool.query(query, values);
+
+        console.log(rows);
+        res.status(200).send({ message: 'Item updated', affectedId: id });
+    } catch (error) {
+        res.status(500).send({error});
+    }
+});
+
+// DELETE an existing item
 router.delete('/api/inventory/:id', async (req, res) => {
     // :id from URL can be accessed at req.params.id
     const id = req.params.id;

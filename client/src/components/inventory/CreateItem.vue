@@ -73,7 +73,7 @@ export default {
     methods: {
         create: function() {
             console.log(this.item);
-            axios.post('http://192.168.20.80:3000/api/inventory', {
+            axios.post('http://localhost:3000/api/inventory', {
                 name: this.item.name,
                 size: `${this.item.size} ${this.item.size_unit}`, // concat the size and size_unit
                 num_count: this.item.num_count,
