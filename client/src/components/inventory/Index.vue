@@ -33,8 +33,8 @@
                         </div>
                     </div>
                     <footer class="card-footer">
-                        <a href="#" class="card-footer-item">Update quantity</a>
-                        <a href="#" class="card-footer-item">Edit</a>
+                        <router-link v-bind:to=" `/inventory/${item.id}/update` " class="card-footer-item">Update</router-link>
+                        <a href="#" class="card-footer-item">Edit (link not working)</a>
                     </footer>
                 </div>
             </li>

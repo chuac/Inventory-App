@@ -77,12 +77,12 @@ export default {
                 name: this.item.name,
                 size: this.item.size,
                 size_unit: this.item.size_unit,
-                //size: `${this.item.size} ${this.item.size_unit}`, // concat the size and size_unit
                 num_count: this.item.num_count,
                 description: this.item.description
             })
             .then((response) => {
                 console.log(response);
+                this.$router.push('/inventory');
             })
         }
     }
