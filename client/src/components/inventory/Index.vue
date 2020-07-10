@@ -22,7 +22,7 @@
                 <div class="card">
                     <header class="card-header">
                         <p class="card-header-title">
-                             {{ item.name }} - {{ item.size }}
+                             {{ item.name }} - {{ item.size }} {{ item.size_unit }}
                         </p>
                     </header>
                     <div class="card-content">

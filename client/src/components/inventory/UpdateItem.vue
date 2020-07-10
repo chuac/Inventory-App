@@ -2,7 +2,7 @@
     <div class="columns is-centered">
         <div class="column is-one-third">
             <form method="POST">
-                <h1 class="title">Add a new item</h1>
+                <h1 class="title">Update item</h1>
                 <div class="field">
                     <label class="label">Item name</label>
                     <input v-model.lazy="item.name" required class="input" placeholder="Item name" name="name" />
@@ -49,7 +49,7 @@
                     <p class="help is-danger"></p>
                     
                 </div>
-                <button v-on:click.prevent="create" class="button is-primary">Create</button>
+                <button v-on:click.prevent="update" class="button is-primary">Update</button>
                 </form>
         </div>
     </div>
@@ -71,13 +71,12 @@ export default {
         }
     },
     methods: {
-        create: function() {
+        update: function() {
             console.log(this.item);
-            axios.post('http://localhost:3000/api/inventory', {
+            axios.put(`http://localhost:3000/api/inventory/${this.$route.params.id}`, {
                 name: this.item.name,
                 size: this.item.size,
                 size_unit: this.item.size_unit,
-                //size: `${this.item.size} ${this.item.size_unit}`, // concat the size and size_unit
                 num_count: this.item.num_count,
                 description: this.item.description
             })
@@ -85,6 +84,21 @@ export default {
                 console.log(response);
             })
         }
+    },
+    created() {
+        console.log(this.$route.params.id);
+        axios.get(`http://localhost:3000/api/inventory/${this.$route.params.id}`)
+        .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+                this.item.name = response.data[0].name;
+                this.item.size = response.data[0].size;
+                this.item.size_unit = response.data[0].size_unit;
+                this.item.num_count = response.data[0].num_count;
+                this.item.description = response.data[0].description;
+            }
+            
+        })
     }
 }
 </script>
