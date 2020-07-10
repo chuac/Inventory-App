@@ -49,8 +49,25 @@
                     <p class="help is-danger"></p>
                     
                 </div>
-                <button v-on:click.prevent="update" class="button is-primary">Update</button>
+                <div class="buttons">
+                    <button v-on:click.prevent="updateItem" class="button is-primary">Update</button>
+                    <button v-on:click.prevent="deleteConfirmation = !deleteConfirmation" class="button is-danger is-outlined">Delete</button>
+                </div>
                 </form>
+        </div>
+        <div v-bind:class="{'is-active': deleteConfirmation}" class="modal">
+            <div v-on:click="deleteConfirmation = !deleteConfirmation" class="modal-background"></div>
+            <div class="modal-content">
+                <article class="message is-warning">
+                    <div class="message-header">
+                        Confirm deletion?
+                        <button v-on:click="deleteConfirmation = !deleteConfirmation" class="delete"></button> <!-- bootstrap class of "delete" shows that small X to close modal -->
+                    </div>
+                    <div class="message-body">
+                        <button v-on:click.prevent="deleteItem" class="button is-danger">DELETE</button>
+                    </div>
+                </article>
+            </div>
         </div>
     </div>
 </template>
@@ -67,11 +84,12 @@ export default {
                 size_unit: '',
                 num_count: '',
                 description: ''
-            }
+            },
+            deleteConfirmation: false // will be flipped when we want to show user the modal
         }
     },
     methods: {
-        update: function() {
+        updateItem: function() {
             console.log(this.item);
             axios.put(`http://localhost:3000/api/inventory/${this.$route.params.id}`, {
                 name: this.item.name,
@@ -83,6 +101,17 @@ export default {
             .then((response) => {
                 console.log(response);
                 this.$router.push('/inventory');
+            })
+        },
+        deleteItem: function() {
+            console.log('delete');
+            axios.delete(`http://localhost:3000/api/inventory/${this.$route.params.id}`)
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    console.log('item deleted');
+                    this.$router.push('/inventory');
+                }
             })
         }
     },
@@ -106,5 +135,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.modal-content {
+    width: 200px;
+}
 </style>
