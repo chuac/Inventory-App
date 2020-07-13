@@ -20,7 +20,8 @@ router.get('/api/inventory', async (req, res) => {
             res.send([]);
         }
     } catch (error) {
-        res.status(500).send({error});
+        console.log(error);
+        res.status(500).send({ message: 'Something went wrong', error});
     }
 });
 
@@ -70,7 +71,8 @@ router.put('/api/inventory/:id', async (req, res) => {
                 size = ?,
                 size_unit = ?,
                 num_count = ?,
-                description = ?
+                description = ?,
+                last_updated = NOW()
             WHERE id = ?`
         let [rows] = await db.pool.query(query, values);
 

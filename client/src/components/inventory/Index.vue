@@ -27,9 +27,11 @@
                     </header>
                     <div class="card-content">
                         <div class="content">
-                            {{ item.num_count }}
+                            {{ item.num_count }} remaining
                             <br>
-                            <time datetime="2016-1-1"></time>
+                            <time>
+                                Last updated {{ relativeTime(item.last_updated) }}
+                            </time>
                         </div>
                     </div>
                     <footer class="card-footer">
@@ -44,6 +46,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
     data() {
@@ -54,7 +57,7 @@ export default {
     created() {
         axios.get('http://localhost:3000/api/inventory')
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 this.items = response.data;
                 console.log(this.items);
             })
@@ -66,6 +69,11 @@ export default {
         //     this.items = data.data.slice(0, 10); // we want just first 10 elements
         //     //this.items = data;
         // }) http://localhost:3000/api/inventory
+    },
+    methods: {
+        relativeTime: function (dateTime) {
+            return moment(dateTime).fromNow();
+        }
     }
 }
 </script>
