@@ -3,6 +3,7 @@ import Vuelidate from "vuelidate";
 import App from './App.vue'
 import Routes from './routes'
 import VueRouter from 'vue-router'
+import { store } from './store/store' // import in the store we created and added data to
 
 Vue.config.productionTip = false
 
@@ -18,5 +19,6 @@ const router = new VueRouter({
 
 new Vue({
   render: h => h(App),
-  router: router
+  router: router,
+  store: store
 }).$mount('#app')

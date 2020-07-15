@@ -8,3 +8,7 @@ pass: test
 (locals.message) can be used as shorthand for (typeof message !== 'undefined')
 
 <%= `"${row.last_updated}"` %>
+
+Tasks:
+1. Shopping list, do all items first, then add tab system for which categories to shop for. maybe store the shopping list in Vuex store?
+2. Login/auth

@@ -91,6 +91,7 @@ export default {
 <style scoped>
 li { /* remove bullet points for li */
   list-style-type : none;
+  margin-bottom: 0.9rem;
 }
 
 .low-stock { /* NOT USED CURRENTLY */
