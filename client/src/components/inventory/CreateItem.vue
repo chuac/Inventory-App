@@ -14,7 +14,7 @@
                 <label class="label">Size</label>
                 <div class="field has-addons">
                     <p class="control">
-                        <input v-model.lazy="item.size" required class="input" placeholder="Size" name="size" />
+                        <input v-model.lazy="$v.item.size.$model" required class="input" placeholder="Size" name="size" />
                     </p>
                     <p class="control">
                         <span class="select">
@@ -40,11 +40,19 @@
                     
                     <p class="help is-danger" v-if="submitted && !$v.item.num_count.required">This field is required</p>
                     <p class="help is-danger" v-if="submitted && !$v.item.num_count.decimal">Has to be a number</p>
+                    <p class="help is-danger" v-if="submitted && !$v.item.num_count.maxLength">Must be less than 10 characters</p>
+                </div>
+                <div class="field">
+                    <label class="label">Low stock threshold</label>
+                    <input v-model.lazy="$v.item.threshold.$model" required class="input" placeholder="Threshold for low stock warning" name="threshold"/>
+
+                    <p class="help is-danger" v-if="submitted && !$v.item.threshold.decimal">Has to be a number</p>
+                    <p class="help is-danger" v-if="submitted && !$v.item.threshold.maxLength">Must be less than 10 characters</p>
                 </div>
                 <div class="field">
                     <label class="label">Description</label>
                     <div class="control">
-                        <textarea v-model.lazy="item.description" class="textarea" placeholder="Description" name="description"></textarea>
+                        <textarea v-model.lazy="$v.item.description.$model" class="textarea" placeholder="Description" name="description"></textarea>
                     </div>
                     
                     <p class="help is-danger"></p>
@@ -69,6 +77,7 @@ export default {
                 size: '',
                 size_unit: '',
                 num_count: '',
+                threshold: '',
                 description: ''
             },
             submitted : false
@@ -89,6 +98,10 @@ export default {
                 decimal,
                 maxLength: maxLength(10)
             },
+            threshold: {
+                decimal,
+                maxLength: maxLength(10)
+            },
             description: {
                 maxLength: maxLength(100)
             }
@@ -101,6 +114,7 @@ export default {
                 size: this.item.size,
                 size_unit: this.item.size_unit,
                 num_count: this.item.num_count,
+                threshold: this.item.threshold,
                 description: this.item.description
             })
             .then((response) => {

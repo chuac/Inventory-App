@@ -19,18 +19,19 @@
             </div>
             <br>
             <li v-for="item in items" v-bind:key="item.id">
-                <div class="card">
+                <div v-bind:class="{'has-background-warning-light': belowThreshold(item)}" class="card">
                     <header class="card-header">
                         <p class="card-header-title">
-                             {{ item.name }} - {{ item.size }} {{ item.size_unit }}
+                            {{ item.name }} - {{ item.size }} {{ item.size_unit }}
                         </p>
+                        <i v-if="belowThreshold(item)" class="fa fa-exclamation-triangle has-text-danger" aria-hidden="true"></i>
                     </header>
                     <div class="card-content">
                         <div class="content">
-                            {{ item.num_count }} remaining
+                            {{ +item.num_count }} remaining
                             <br>
                             <time>
-                                Last updated {{ relativeTime(item.last_updated) }}
+                                Updated {{ relativeTime(item.last_updated) }}
                             </time>
                         </div>
                     </div>
@@ -73,7 +74,15 @@ export default {
     methods: {
         relativeTime: function (dateTime) {
             return moment(dateTime).fromNow();
+        },
+        belowThreshold: function (item) {
+            return +item.num_count < +item.threshold;
         }
+    },
+    computed: {
+        // belowThreshold: function () {
+        //     return +this.items.num_count < + this.items.threshold;
+        // }
     }
 }
 </script>
@@ -82,5 +91,14 @@ export default {
 <style scoped>
 li { /* remove bullet points for li */
   list-style-type : none;
+}
+
+.low-stock { /* NOT USED CURRENTLY */
+    background-color: yellow;
+}
+
+.fa-exclamation-triangle { /* Red font-awesome exclamation triangle to show low stock */
+    margin-top: 1em;
+    margin-right: 1em;
 }
 </style>

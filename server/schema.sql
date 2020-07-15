@@ -15,6 +15,7 @@ CREATE TABLE items (
     size VARCHAR(100),
     size_unit VARCHAR(100),
     num_count DECIMAL(8, 2), -- can hold up to number 999,999.99
+    threshold DECIMAL(8, 2),
     description VARCHAR(100),
     image_link VARCHAR(255),
     last_updated TIMESTAMP DEFAULT NOW()

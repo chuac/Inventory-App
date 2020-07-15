@@ -44,12 +44,12 @@ router.get('/api/inventory/:id', async (req, res) => {
 // POST a new item
 router.post('/api/inventory', async (req, res) => {
     console.log(req.body);
-    const { name, size, size_unit, num_count, description } = req.body; // all form data is contained inside req.body
+    const { name, size, size_unit, num_count, threshold, description } = req.body; // all form data is contained inside req.body
     
-    const values = [name, size, size_unit, num_count, description ];
+    const values = [name, size, size_unit, num_count, threshold, description ];
 
     try {
-        let [rows] = await db.pool.query('INSERT INTO items(name, size, size_unit, num_count, description) VALUES(?)', [values]);
+        let [rows] = await db.pool.query('INSERT INTO items(name, size, size_unit, num_count, threshold, description) VALUES(?)', [values]);
         
         console.log(rows);
         res.status(201).send({ message: 'New item inserted', insertId: rows.insertId });
@@ -61,9 +61,9 @@ router.post('/api/inventory', async (req, res) => {
 // UPDATE/PUT an existing item
 router.put('/api/inventory/:id', async (req, res) => {
     const id = req.params.id;
-    const { name, size, size_unit, num_count, description } = req.body; // all form data is contained inside req.body
+    const { name, size, size_unit, num_count, threshold, description } = req.body; // all form data is contained inside req.body
 
-    const values = [ name, size, size_unit, num_count, description, id ];
+    const values = [ name, size, size_unit, num_count, threshold, description, id ];
     try {
         const query = 
             `UPDATE items
@@ -71,6 +71,7 @@ router.put('/api/inventory/:id', async (req, res) => {
                 size = ?,
                 size_unit = ?,
                 num_count = ?,
+                threshold = ?,
                 description = ?,
                 last_updated = NOW()
             WHERE id = ?`
