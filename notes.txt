@@ -11,6 +11,8 @@ pass: test
 
 Tasks:
 1. Shopping list, do all items first, then add tab system for which categories to shop for. maybe store the shopping list in Vuex store?
+Parent Purchasing.vue will query for names of tags from DB. GET /api/tags/inventory  . Make the tabs for all the tag names, handle which index tab is currently selected,
+	default to 0 position at beginning
 2. Tagging system
-2a. Add validator to tags, cant allow comma
+2a. Add validator to tags, cant allow comma to be in tag's name
 3. Login/auth

@@ -31,7 +31,7 @@ router.get('/api/tags/inventory/:tag', async (req, res) => {
         if (rows.length > 0) { // found at least one item
             res.send(rows);
         } else {
-            res.send([])
+            res.status(404).send({ message: 'No items found with that tag' })
         }
     } catch (error) {
         res.status(500).send({ error });

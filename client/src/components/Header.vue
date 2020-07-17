@@ -33,6 +33,9 @@
                             <router-link v-bind:to="`/inventory/purchasing`" class="navbar-item">
                                 Purchasing List
                             </router-link>
+                            <router-link v-bind:to="`/inventory/purchasingList`" class="navbar-item">
+                                Old Purchasing List
+                            </router-link>
                             <a class="navbar-item">
                                 Contact
                             </a>

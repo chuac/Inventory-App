@@ -2,6 +2,7 @@ import InventoryIndex from './components/inventory/Index.vue'
 import InventoryCreateItem from './components/inventory/CreateItem.vue'
 import InventoryUpdateItem from './components/inventory/UpdateItem.vue'
 import InventoryPurchasingList from './components/inventory/PurchasingList.vue'
+import InventoryPurchasing from './components/inventory/Purchasing.vue'
 
 export default [
     {
@@ -17,7 +18,11 @@ export default [
         component: InventoryUpdateItem
     },
     {
-        path: '/inventory/purchasing',
+        path: '/inventory/purchasingList',
         component: InventoryPurchasingList
+    },
+    {
+        path: '/inventory/purchasing',
+        component: InventoryPurchasing
     }
 ]
