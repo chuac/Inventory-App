@@ -25,10 +25,46 @@ const pool  = mysql.createPool({
 //     }
 // }
 
-module.exports.pool = pool.promise();
-// module.exports = {
-//     getOne
-// }
+const promisedPool = pool.promise();
+
+//module.exports.pool = pool.promise();
+module.exports = {
+    pool: pool.promise(), // to still be able to import in other files if we want to do unique queries
+    getAll: async () => {
+        try {
+            let [rows] = await promisedPool.query('SELECT * FROM items ORDER BY last_updated DESC');
+            if (rows.length > 0) { // found at least one item
+                return rows;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+    getAllWithTags: async () => {
+        try {
+            let q = `SELECT items.*,
+                            GROUP_CONCAT(item_tags.tag_id) AS 'grouped_tag_id',
+                            GROUP_CONCAT(tags.tag_name) AS 'grouped_tag_name'
+                        FROM items
+                            LEFT JOIN item_tags ON items.id = item_tags.item_id
+                            LEFT JOIN tags ON item_tags.tag_id = tags.id
+                        GROUP BY items.id
+                        ORDER BY items.last_updated DESC;`
+            let [rows] = await promisedPool.query(q);
+            if (rows.length > 0) { // found at least one item
+                return rows;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
+}
 
 //// We could also export getConnection() below if we wanted to do share connection state for subsequent queries (transanctions possibly). Pools can't guarantee this
 // module.exports.getConnection = function(callback) {
