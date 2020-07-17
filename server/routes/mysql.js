@@ -30,20 +30,20 @@ const promisedPool = pool.promise();
 //module.exports.pool = pool.promise();
 module.exports = {
     pool: pool.promise(), // to still be able to import in other files if we want to do unique queries
-    getAll: async () => {
-        try {
-            let [rows] = await promisedPool.query('SELECT * FROM items ORDER BY last_updated DESC');
-            if (rows.length > 0) { // found at least one item
-                return rows;
-            } else {
-                return [];
-            }
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-    getAllWithTags: async () => {
+    // getAll: async () => {
+    //     try {
+    //         let [rows] = await promisedPool.query('SELECT * FROM items ORDER BY last_updated DESC');
+    //         if (rows.length > 0) { // found at least one item
+    //             return rows;
+    //         } else {
+    //             return [];
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         return error;
+    //     }
+    // },
+    getAllItems: async () => {
         try {
             let q = `SELECT items.*,
                             GROUP_CONCAT(item_tags.tag_id) AS 'grouped_tag_id',
@@ -55,6 +55,65 @@ module.exports = {
                         ORDER BY items.last_updated DESC;`
             let [rows] = await promisedPool.query(q);
             if (rows.length > 0) { // found at least one item
+                return rows;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+    getOneItem: async (id) => {
+        try {
+            let q = `SELECT items.*,
+                            GROUP_CONCAT(tags.tag_name) AS 'grouped_tag_name'
+                        FROM items
+                            INNER JOIN item_tags ON items.id = item_tags.item_id
+                            INNER JOIN tags ON item_tags.tag_id = tags.id
+                        WHERE items.id = ?;`
+            let [rows] = await promisedPool.query(q, id);
+            if (rows.length > 0) { // found at least one item
+                return rows;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+    getItemsHavingTag: async (tag) => {
+        try {
+            let q = `SELECT items.*
+                        FROM items
+                            INNER JOIN item_tags on items.id = item_tags.item_id
+                            INNER JOIN tags ON item_tags.tag_id = tags.id
+                        WHERE tags.tag_name = ?;`
+            let [rows] = await promisedPool.query(q, tag);
+            if (rows.length > 0) { // found at least one item
+                return rows;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+    getTags: async () => {
+        try {
+            let q = `SELECT tags.id, 
+                            tags.tag_name, 
+                            COUNT(item_tags.item_id) AS 'items_with_tag'
+                        FROM tags
+                        LEFT JOIN item_tags
+                            ON tags.id = item_tags.tag_id
+                        GROUP BY tags.id
+                        ORDER BY 3 DESC;`
+            let [rows] = await promisedPool.query(q);
+            if (rows.length > 0) { // found at least one item
+                console.log(rows);
                 return rows;
             } else {
                 return [];

@@ -12,4 +12,5 @@ pass: test
 Tasks:
 1. Shopping list, do all items first, then add tab system for which categories to shop for. maybe store the shopping list in Vuex store?
 2. Tagging system
+2a. Add validator to tags, cant allow comma
 3. Login/auth

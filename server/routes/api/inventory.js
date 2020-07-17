@@ -1,30 +1,17 @@
 const express = require('express');
 
 const db = require('../mysql');
-const { getAll,
-        getAllWithTags } = require('../mysql');
+const { getAllItems,
+        getOneItem,
+    } = require('../mysql');
 
 const router = express.Router();
 
+
 // GET all items, ordered by last_updated
-router.get('/api/inventory', async (req, res) => {
-    // try {
-    //     let [rows] = await db.pool.query('SELECT * FROM items ORDER BY last_updated DESC');
-    //     if (rows.length > 0) { // found at least one item
-    //         console.log('Someone requested a GET');
-    //         res.send(rows);
-    //     } else {
-    //         res.send([]);
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).send({ message: 'Something went wrong', error});
-    // }
+router.get('/api/inventory/', async (req, res) => {
     try {
-        let rows = await getAllWithTags();
-        for (let row of rows) {
-            console.log(row);
-        }
+        let rows = await getAllItems();
         if (rows.length > 0) { // found at least one item
             console.log('Someone requested a GET');
             res.send(rows);
@@ -42,7 +29,7 @@ router.get('/api/inventory/:id', async (req, res) => {
     // :id from URL can be accessed at req.params.id
     const id = req.params.id;
     try {
-        let [rows] = await db.pool.query('SELECT * FROM items WHERE id = ?', id);
+        let rows = await getOneItem(id);
         if (rows.length > 0) { // found at least one item
             res.send(rows);
         } else {
@@ -112,7 +99,6 @@ router.delete('/api/inventory/:id', async (req, res) => {
         res.status(500).send({error});
     }
 });
-
 
 
 

@@ -13,6 +13,7 @@ const authRouter = require('./routes/auth');
 const inventoryRouter = require('./routes/inventory');
 
 const apiInventoryRouter = require('./routes/api/inventory');
+const apiTagsRouter = require('./routes/api/tags');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(authRouter);
 app.use(inventoryRouter);
 
 app.use(apiInventoryRouter);
+app.use(apiTagsRouter);
 
 app.get('/', (req, res) => {
     res.render('index', { message: req.flash('info') }); // message will hold an array of flash messages returned by passing the key to req.flash()

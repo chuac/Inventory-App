@@ -33,6 +33,7 @@
                             <time>
                                 Updated {{ relativeTime(item.last_updated) }}
                             </time>
+                            {{ item.grouped_tag_name }}
                         </div>
                     </div>
                     <footer class="card-footer">
