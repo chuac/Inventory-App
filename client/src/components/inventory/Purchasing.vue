@@ -3,13 +3,12 @@
         <div class="column is-one-third">
             <div class="tabs is-centered">
                 <ul>
-                    <li class="is-active"><a>Pictures</a></li>
                     <li v-for="(tag, index) in tags" v-bind:key="tag.id">
-                        <router-link v-bind:to="``">{{ tag.tag_name + index }}</router-link>
+                        <a v-on:click.prevent="activeTag = tag.tag_name">{{ tag.tag_name + index }}</a>
                     </li>
-                    
                 </ul>
             </div>
+            <purchasing-list v-bind:tag="activeTag"></purchasing-list>
         </div>
     </div>
 </template>
@@ -17,17 +16,34 @@
 <script>
 import axios from 'axios';
 
+import PurchasingList from './PurchasingList.vue';
+
 export default {
+    components: {
+        'purchasing-list': PurchasingList
+    },
     data() {
         return {
-            tags: []
+            tags: [],
+            activeTag: 'All'
         }
     },
+    methods: {
+        clickedTag: function (tag_name) {
+            console.log(tag_name);
+            this.activeTag = tag_name;
+        }
+    },
+    // computed: {
+    //     activeTag: function() {
+    //         return 'blah'
+    //     }
+    // },
     created() {
         axios.get('http://localhost:3000/api/tags/inventory')
             .then((response) => {
                 //console.log(response);
-                this.tags = response.data;
+                this.tags = [ {id: 0, tag_name: 'All'}, ...response.data ]
                 console.log(this.tags);
             })
             .catch((error) => {

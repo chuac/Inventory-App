@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-        purchasingListItems: []
+        purchasingListItems: [],
+        tags: []
     },
     getters: {
         isChecked: (state) => (index) => { // not currently needed

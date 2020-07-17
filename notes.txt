@@ -16,3 +16,6 @@ Parent Purchasing.vue will query for names of tags from DB. GET /api/tags/invent
 2. Tagging system
 2a. Add validator to tags, cant allow comma to be in tag's name
 3. Login/auth
+
+
+work out how to add is-active to the tag/tab clicked
