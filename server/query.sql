@@ -49,5 +49,6 @@ SELECT items.*
 FROM items
     INNER JOIN item_tags on items.id = item_tags.item_id
     INNER JOIN tags ON item_tags.tag_id = tags.id
-WHERE tags.tag_name = 'Groceries';
+WHERE tags.tag_name = 'Groceries'
+ORDER BY items.last_updated DESC;
 

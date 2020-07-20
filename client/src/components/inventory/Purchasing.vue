@@ -3,11 +3,15 @@
         <div class="column is-one-third">
             <div class="tabs is-centered">
                 <ul>
-                    <li v-for="(tag, index) in tags" v-bind:key="tag.id">
-                        <a v-on:click.prevent="clickedTag(tag.tag_name)">{{ tag.tag_name + index }}</a>
+                    <li v-for="(tag) in tags" 
+                        v-bind:key="tag.id"
+                        v-bind:class="{'is-active': tag.tag_name === activeTag}"
+                    >
+                        <a v-on:click.prevent="clickedTag(tag.tag_name)">{{ tag.tag_name }}</a>
                     </li>
                 </ul>
             </div>
+            <button v-on:click="clearItems">Clear Items</button>
             <purchasing-list v-bind:tag="activeTag" v-on:refresh-items="fetchItemsFromAPI(activeTag)"></purchasing-list>
         </div>
     </div>
@@ -26,7 +30,7 @@ export default {
     data() {
         return {
             tags: [],
-            activeTag: 'All'
+            activeTag: ''
         }
     },
     computed: {
@@ -51,7 +55,13 @@ export default {
             this.activeTag = tag_name;
         },
         fetchItemsFromAPI: function (tag_name) {
-            axios.get(`http://localhost:3000/api/tags/inventory/${tag_name}`)
+            let url = '';
+            if (tag_name.toLowerCase() === 'all') {
+                url = `http://localhost:3000/api/inventory`;
+            } else {
+                url = `http://localhost:3000/api/tags/inventory/${tag_name}`
+            }
+            axios.get(url)
             .then((response) => {
                 //console.log(response);
                 //this.items = response.data;
@@ -62,17 +72,15 @@ export default {
                     tag: tag_name,
                     items: response.data
                 });
+                console.log('blaaah');
+                console.log(this.getWithTag(tag_name));
             })
             .catch((error) => {
                 console.log(error);
             })
         }
     },
-    // computed: {
-    //     activeTag: function() {
-    //         return 'blah'
-    //     }
-    // },
+
     created() {
         axios.get('http://localhost:3000/api/tags/inventory')
             .then((response) => {
@@ -82,6 +90,7 @@ export default {
             .catch((error) => {
                 console.log(error);
             })
+        this.clickedTag('All'); // default tab will be 'All'
     },
 }
 </script>

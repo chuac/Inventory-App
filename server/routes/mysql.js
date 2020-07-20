@@ -89,7 +89,8 @@ module.exports = {
                         FROM items
                             INNER JOIN item_tags on items.id = item_tags.item_id
                             INNER JOIN tags ON item_tags.tag_id = tags.id
-                        WHERE tags.tag_name = ?;`
+                        WHERE tags.tag_name = ?
+                        ORDER BY items.last_updated DESC;`
             let [rows] = await promisedPool.query(q, tag);
             if (rows.length > 0) { // found at least one item
                 return rows;

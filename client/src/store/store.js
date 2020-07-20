@@ -62,7 +62,18 @@ export const store = new Vuex.Store({
             state.tags = {};
         },
         itemChecked: (state, payload) => {
-            state.purchasingListItems[payload].checked = !state.purchasingListItems[payload].checked;
+            //state.purchasingListItems[payload].checked = !state.purchasingListItems[payload].checked;
+            const { tag, index } = payload;
+            console.log(`tag is ${tag}`);
+            console.log(`index is ${index}`);
+            console.log(state.tags[tag]);
+            state.tags[tag][index].checked = !state.tags[tag][index].checked;
+
+            //let checked2 = !state.tags[tag][index].checked;
+
+            //state.tags[tag] = { ...state.tags[tag], checked: checked2 }
+            //const tagObject = { ...state.tags[tag], checked: checked2};
+            //state.tags = { ...state.tags, [tag]: tagObject };
         }
     },
     actions: {
