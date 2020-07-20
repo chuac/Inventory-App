@@ -12,6 +12,7 @@
                 </ul>
             </div>
             <button v-on:click="clearItems">Clear Items</button>
+            <hr>
             <purchasing-list v-bind:tag="activeTag" v-on:refresh-items="fetchItemsFromAPI(activeTag)"></purchasing-list>
         </div>
     </div>
@@ -35,9 +36,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'getWithTag',
-            'getTags',
-            'tagInTags'
+            'isTagInTags'
         ]),
     },
     methods: {
@@ -47,7 +46,7 @@ export default {
             'itemChecked'
         ]),
         clickedTag: function (tag_name) {
-            if (!(this.tagInTags(tag_name))) { // current tag's items are not yet in the Vuex store
+            if (!(this.isTagInTags(tag_name))) { // current tag's items are not yet in the Vuex store
                 this.fetchItemsFromAPI(tag_name);
             } else {
                 console.log('else');
@@ -72,8 +71,7 @@ export default {
                     tag: tag_name,
                     items: response.data
                 });
-                console.log('blaaah');
-                console.log(this.getWithTag(tag_name));
+
             })
             .catch((error) => {
                 console.log(error);

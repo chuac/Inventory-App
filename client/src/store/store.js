@@ -15,29 +15,16 @@ export const store = new Vuex.Store({
             return state.purchasingListItems[index].checked;
         },
         getWithTag: (state) => (tag) => {
-            console.log('in getter');
             return state.tags[tag];
         },
-        getTags: (state) => {
-            return state.tags;
-        },
-        tagInTags: (state) => (tag) => {
+        isTagInTags: (state) => (tag) => {
             return (tag in state.tags);
         }
     },
     mutations: {
-        // insertTags: (state, payload) => {
-
-        // },
         insertItems: (state, payload) => {
-            console.log('in store');
             const { items, tag } = payload;
-            if (!(tag in state.tags)) {
-                console.log(`${tag} not found in state.tags`);
-            } else {
-                console.log(`${tag} found in state!!`)
-            }
-            console.log(items);
+
             const newItems = [];
             items.forEach((item) => {
                 newItems.push({
@@ -64,9 +51,7 @@ export const store = new Vuex.Store({
         itemChecked: (state, payload) => {
             //state.purchasingListItems[payload].checked = !state.purchasingListItems[payload].checked;
             const { tag, index } = payload;
-            console.log(`tag is ${tag}`);
-            console.log(`index is ${index}`);
-            console.log(state.tags[tag]);
+
             state.tags[tag][index].checked = !state.tags[tag][index].checked;
 
             //let checked2 = !state.tags[tag][index].checked;

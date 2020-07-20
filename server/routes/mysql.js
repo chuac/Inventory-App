@@ -114,7 +114,6 @@ module.exports = {
                         ORDER BY 3 DESC;`
             let [rows] = await promisedPool.query(q);
             if (rows.length > 0) { // found at least one item
-                console.log(rows);
                 return rows;
             } else {
                 return [];

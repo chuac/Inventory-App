@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h1>Current tag is {{ tag }}</h1> 
+        <strong>{{ tag }}</strong><h1></h1>
+        <br> 
         <button v-on:click="refreshItems">Refresh this list of items</button>
-        
         <br>
         <ul>
             <li v-for="(object, index) in getWithTag(tag)" v-bind:key="object.item.id">
@@ -55,15 +55,14 @@ export default {
     },
     methods: {
         ...mapActions([
-            'clearItems',
             'itemChecked'
         ]),
         belowThreshold(item) {
             return +item.num_count < +item.threshold;
         },
-        itemChecked() { // not currently used. need to emit data aswell
-            this.$emit('item-checked');
-        },
+        // itemChecked() { // not currently used. need to emit data aswell
+        //     this.$emit('item-checked');
+        // },
         refreshItems() {
             this.$emit('refresh-items'); // emit our event to be listened to in the parent component
         }
