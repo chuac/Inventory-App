@@ -19,3 +19,5 @@ Parent Purchasing.vue will query for names of tags from DB. GET /api/tags/invent
 
 
 work out how to add is-active to the tag/tab clicked
+
+Get the child to emit an event when "refresh/reset" button in clicked, then hit fetchItemsFromAPI again

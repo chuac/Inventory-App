@@ -1,19 +1,20 @@
 <template>
     <div>
         <h1>Current tag is {{ tag }}</h1> 
-        <button v-on:click="fetchItemsFromAPI">Create Purchasing List with items in current tag</button>
+        <button v-on:click="refreshItems">Create Purchasing List with items in current tag</button>
         <button v-on:click="clearItems">Clear Items</button>
         <br>
         <ul>
-            <li v-for="(object, index) in items" v-bind:key="object.id">
-                {{ object.name + ' ' + index}}
+            <li v-for="(object, index) in getWithTag(tag)" v-bind:key="object.id">
+                {{ object.item.name + ' ' + index}}
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     props: {
@@ -23,31 +24,25 @@ export default {
     },
     data() {
         return {
-            items: []
+
         }
     },
+    computed: {
+        ...mapGetters([
+            'getWithTag',
+        ]),
+    },
     methods: {
-        fetchItemsFromAPI: function () {
-            axios.get(`http://localhost:3000/api/tags/inventory/${this.tag}`)
-            .then((response) => {
-                //console.log(response);
-                this.items = response.data;
-                console.log(response.data);
-                //this.clearItems();
-                //this.insertItems(response.data);
-
-                //console.log(this.$store.state.purchasingListItems)
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-        },
-        clearItems: function () {
-            this.items = [];
-        },
+        ...mapActions([
+            'clearItems',
+            'itemChecked'
+        ]),
         belowThreshold(item) {
             return +item.num_count < +item.threshold;
         },
+        refreshItems() {
+            this.$emit('refresh-items'); // emit our event to be listened to in the parent component
+        }
     }
 }
 </script>
