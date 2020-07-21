@@ -122,6 +122,18 @@ module.exports = {
             console.log(error);
             return error;
         }
+    },
+    addOneItemAndTagRelation: async (item_id, tag_id) => { // will need to check if the relation already exists. or maybe make one function to updateOrAdd relations
+        const values = [item_id, tag_id];
+
+        try {
+            let [rows] = await db.pool.query('INSERT INTO item_tags(item_id, tag_id) VALUES(?)', [values]);
+
+            console.log(rows);
+            res.status(201).send({ message: 'New item and tag relation inserted', insertId: rows.insertId });
+        } catch (error) {
+            res.status(500).send({ error });
+        }
     }
 }
 

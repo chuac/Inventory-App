@@ -38,5 +38,22 @@ router.get('/api/tags/inventory/:tag', async (req, res) => {
     }
 });
 
+// POST a new inventory item and tag relation. How to handle if the relation already exists?
+router.post('/api/tags/inventory', async (req, res) => {
+    //console.log(req.body);
+    const { item_id, tag_id } = req.body; // all form data is contained inside req.body
+
+    const values = [ item_id, tag_id ];
+
+    try {
+        let [rows] = await db.pool.query('INSERT INTO item_tags(item_id, tag_id) VALUES(?)', [values]);
+
+        console.log(rows);
+        res.status(201).send({ message: 'New item and tag relation inserted', insertId: rows.insertId });
+    } catch (error) {
+        res.status(500).send({ error });
+    }
+});
+
 
 module.exports = router;

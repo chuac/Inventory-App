@@ -19,14 +19,14 @@
                     <p class="control">
                         <span class="select">
                             <select v-model.lazy="item.size_unit">
-                              <option>g</option>
-                              <option>kg</option>
-                              <option>mL</option>
-                              <option>L</option>
-                              <option>bottle(s)</option>
-                              <option>6-pack</option>
-                              <option>carton(s)</option>
-                              <option>packet(s)</option>
+                                <option>g</option>
+                                <option>kg</option>
+                                <option>mL</option>
+                                <option>L</option>
+                                <option>bottle(s)</option>
+                                <option>6-pack</option>
+                                <option>carton(s)</option>
+                                <option>packet(s)</option>
                             </select>
                           </span>
                     </p>
@@ -49,6 +49,17 @@
 
                     <p class="help is-danger" v-if="submitted && !$v.item.threshold.decimal">Has to be a number</p>
                     <p class="help is-danger" v-if="submitted && !$v.item.threshold.maxLength">Must be less than 10 characters</p>
+                </div>
+                <div class="field">
+                    <label class="label">Categories</label>
+                    <div class="control">
+                        <div v-for="tag in tags" v-bind:key="tag.id">
+                            <input type="checkbox" v-bind:value="tag.id" v-model.lazy="item.selected_tags"/>
+                                {{ tag.tag_name }}
+                        </div>
+                        <span>Selected tags: {{ item.selected_tags }}</span>
+                        
+                    </div>
                 </div>
                 <div class="field">
                     <label class="label">Description</label>
@@ -96,8 +107,10 @@ export default {
                 size_unit: '',
                 num_count: '',
                 threshold: '',
+                selected_tags: [],
                 description: ''
             },
+            tags: [],
             submitted: false,
             deleteConfirmation: false // will be flipped when we want to show user the modal
         }
@@ -167,7 +180,7 @@ export default {
     created() { // pre-fill in the form input boxes with the current item's data
         axios.get(`http://localhost:3000/api/inventory/${this.$route.params.id}`)
         .then((response) => {
-            console.log(response);
+            //console.log(response);
             if (response.status === 200) {
                 this.item.name = response.data[0].name;
                 this.item.size = response.data[0].size;
@@ -177,6 +190,17 @@ export default {
                 this.item.description = response.data[0].description;
             }
             
+        });
+        axios.get('http://localhost:3000/api/tags/inventory')
+        .then((response) => {
+            //console.log(response);
+            //this.tags = [ {id: 0, tag_name: 'All'}, ...response.data ]
+            this.tags = response.data;
+            console.log(`this.tags:`);
+            console.log(this.tags);
+        })
+        .catch((error) => {
+            console.log(error);
         })
     }
 }

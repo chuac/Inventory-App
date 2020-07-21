@@ -20,4 +20,16 @@ Parent Purchasing.vue will query for names of tags from DB. GET /api/tags/invent
 
 work out how to add is-active to the tag/tab clicked
 
-Get the child to emit an event when "refresh/reset" button in clicked, then hit fetchItemsFromAPI again
+Get the child to emit an event when "refresh/reset" button in clicked, then hit fetchItemsFromAPI again.
+
+
+How to update an item's tags? Everytime a form is submitted, the user will provide the updated list of tags that the list should keep. (compare their old tags with new 
+tags from form before making a DB call? to improve performance).
+With this response that consists of item's ID, and an array of wanted tags, 
+
+Get all of the item's current tags, and only keep the ones in wanted tags. i.e, DELETE the ones not found in wanted tags, add the ones found in wanted tags but not in item's
+current tags.
+^^^^^^^^^^^^^
+
+
+we need to check if that item <-> tag relation already exists
