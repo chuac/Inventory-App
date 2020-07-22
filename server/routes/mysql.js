@@ -67,6 +67,7 @@ module.exports = {
     getOneItem: async (id) => {
         try {
             let q = `SELECT items.*,
+                            GROUP_CONCAT(item_tags.tag_id) AS 'grouped_tag_id',
                             GROUP_CONCAT(tags.tag_name) AS 'grouped_tag_name'
                         FROM items
                             INNER JOIN item_tags ON items.id = item_tags.item_id

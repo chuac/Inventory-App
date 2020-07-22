@@ -54,11 +54,12 @@
                     <label class="label">Categories</label>
                     <div class="control">
                         <div v-for="tag in tags" v-bind:key="tag.id">
-                            <input type="checkbox" v-bind:value="tag.id" v-model.lazy="item.selected_tags"/>
+                            <input type="checkbox" v-bind:value="tag.id" v-model.lazy="item.target_tags"/>
                                 {{ tag.tag_name }}
                         </div>
-                        <span>Selected tags: {{ item.selected_tags }}</span>
-                        
+                        <span>Target tags: {{ item.target_tags }}</span>
+                        <br>
+                        <span>Compared tags: {{ compared }}</span>
                     </div>
                 </div>
                 <div class="field">
@@ -107,12 +108,18 @@ export default {
                 size_unit: '',
                 num_count: '',
                 threshold: '',
-                selected_tags: [],
+                current_tags: [],
+                target_tags: [],
                 description: ''
             },
             tags: [],
             submitted: false,
             deleteConfirmation: false // will be flipped when we want to show user the modal
+        }
+    },
+    computed: {
+        compared: function() {
+            return this.compareTagArrays(this.item.current_tags, this.item.target_tags);
         }
     },
     validations: {
@@ -175,9 +182,31 @@ export default {
             }
 
             this.updateItem();
+        },
+        stringToNumbers: function(str) { // could also use JS's map function
+            let result = [];
+            str.split(',').forEach((element) => { // split the string of numbers that are seperated by commas
+                result.push(+element); // convert each element to a number, then push it into our results array
+            });
+            return result;
+        },
+        compareTagArrays: function(current, target) {
+            let toAdd = [];
+            let toDelete = [];
+            for (let i = 0; i < current.length; i++) {
+                if (!(target.includes(current[i]))) { // anything missing in the target array that currently exists in current will be added to toDelete
+                    toDelete.push(current[i]);
+                }
+            }
+            for (let j = 0; j < target.length; j++) {
+                if (!(current.includes(target[j]))) { // anything in the target array that is missing in the current array will be pushed into toAdd
+                    toAdd.push(target[j]);
+                }
+            }
+            return { toAdd, toDelete }; // return both arrays as an object
         }
     },
-    created() { // pre-fill in the form input boxes with the current item's data
+    created() { // pre-fill in the form input boxes with the current item's data, including tags
         axios.get(`http://localhost:3000/api/inventory/${this.$route.params.id}`)
         .then((response) => {
             //console.log(response);
@@ -187,9 +216,10 @@ export default {
                 this.item.size_unit = response.data[0].size_unit;
                 this.item.num_count = response.data[0].num_count;
                 this.item.threshold = response.data[0].threshold;
+                this.item.current_tags = this.stringToNumbers(response.data[0].grouped_tag_id);
+                this.item.target_tags = this.item.current_tags;
                 this.item.description = response.data[0].description;
             }
-            
         });
         axios.get('http://localhost:3000/api/tags/inventory')
         .then((response) => {
