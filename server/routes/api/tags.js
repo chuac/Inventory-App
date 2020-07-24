@@ -2,7 +2,8 @@ const express = require('express');
 
 const db = require('../mysql');
 const { getTags,
-        getItemsHavingTag
+        getItemsHavingTag,
+        addOneItemAndTagRelation
     } = require('../mysql');
 
 const router = express.Router();
@@ -38,20 +39,22 @@ router.get('/api/tags/inventory/:tag', async (req, res) => {
     }
 });
 
-// POST a new inventory item and tag relation. How to handle if the relation already exists?
+// POST new tag relation(s) for an item, tag_ids can be an array of multiple tags to add relations for
 router.post('/api/tags/inventory', async (req, res) => {
-    //console.log(req.body);
-    const { item_id, tag_id } = req.body; // all form data is contained inside req.body
+    const { item_id, tags_to_add } = req.body; // all form data is contained inside req.body
 
-    const values = [ item_id, tag_id ];
-
-    try {
-        let [rows] = await db.pool.query('INSERT INTO item_tags(item_id, tag_id) VALUES(?)', [values]);
-
-        console.log(rows);
-        res.status(201).send({ message: 'New item and tag relation inserted', insertId: rows.insertId });
-    } catch (error) {
-        res.status(500).send({ error });
+    let success = true;
+    for (let tag of tags_to_add) {
+        try {
+            await addOneItemAndTagRelation(item_id, tag);
+        } catch (error) {
+            success = false;
+            res.status(500).send({ error: error.message });
+            break; // break out of the loop on the tags_to_add since we already caught one error
+        }
+    }
+    if (success) {
+        res.status(201).send({ message: 'New item and tag relation(s) inserted', item_id, tags_added: tags_to_add }); // only send a 201 status if no errors were thrown (i.e, all tags inserted ok)
     }
 });
 
