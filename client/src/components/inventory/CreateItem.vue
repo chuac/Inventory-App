@@ -59,7 +59,7 @@
                     
                 </div>
                 <button v-on:click.prevent="handleSubmit" class="button is-primary">Create</button>
-                </form>
+            </form>
         </div>
     </div>
 </template>

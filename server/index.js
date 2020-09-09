@@ -7,10 +7,9 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const cors = require('cors');
 
-const db = require('./routes/mysql'); // the db connection is now made inside the mysqlPool module, and can be accessed from any other module!
 
-const authRouter = require('./routes/auth');
-const inventoryRouter = require('./routes/inventory');
+// const authRouter = require('./routes/auth');
+// const inventoryRouter = require('./routes/inventory');
 
 const apiInventoryRouter = require('./routes/api/inventory');
 const apiTagsRouter = require('./routes/api/tags');
@@ -36,8 +35,9 @@ const app = express();
 app.use(bodyParser.json()); // using bodyParser to parse JSON bodies into JS objects
 app.use(cors());
 
-app.use(authRouter);
-app.use(inventoryRouter);
+// No longer used
+// app.use(authRouter);
+// app.use(inventoryRouter);
 
 app.use(apiInventoryRouter);
 app.use(apiTagsRouter);
